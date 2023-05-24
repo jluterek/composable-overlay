@@ -1,0 +1,153 @@
+<html>
+
+<head>
+    <title>Composable Commerce Overlay</title>
+    <style>
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .highlight {
+            position: absolute;
+            pointer-events: none;
+            display:block;
+            box-sizing: border-box;
+        }
+
+        .highlight.green {
+            background-color: rgba(0, 255, 0, 0.3);
+            border: 4px solid rgba(0,255, 0, 0.5);
+            /* Green highlight color */
+        }
+
+        .highlight.blue {
+            background-color: rgba(0, 0, 255, 0.3);
+            /* blue highlight color */
+        }
+
+        .highlight.red {
+            background-color: rgba(255, 0, 0, 0.3);
+            /* red highlight color */
+        }
+
+        #mainImage {
+            max-width: 100%;
+            width: 800px;
+        }
+        #imageDisplay {
+            position: relative;
+            border: 4px solid grey;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div class="row">
+            <button class="button" onclick="changeImage('homepage')">Homepage</button>
+            <button class="button" onclick="changeImage('plp')">PLP</button>
+            <button class="button" onclick="changeImage('search-results')">Search Results</button>
+            <button class="button" onclick="changeImage('product-page')">Product Page</button>
+        </div>
+        <div class="row">
+            <button class="button" onclick="toggleHighlight('green')">CMS</button>
+            <button class="button" onclick="toggleHighlight('blue')">PIM</button>
+            <button class="button" onclick="toggleHighlight('red')">Search</button>
+        </div>
+        <div id="imageDisplay">
+            <img id="mainImage" src="images/homepage.png" alt="Main Image">
+            <div id="greenHighlightBox" class="highlight green"></div>
+            <div id="blueHighlightBox" class="highlight blue"></div>
+            <div id="redHighlightBox" class="highlight red"></div>
+        </div>
+    </div>
+
+    <script>
+        let greenHighlightVisible = false;
+        let blueHighlightVisible = false;
+        let redHighlightVisible = false;
+        let currentImage = "homepage";
+        adjustHighlightPositions(currentImage);
+
+        function changeImage(image) {
+            currentImage = image;
+            document.getElementById("mainImage").src = `/images/${image}.png`;
+            adjustHighlightPositions(currentImage);
+        }
+
+        function toggleHighlight(color) {
+            let highlightBox = document.getElementById(`${color}HighlightBox`);
+            highlightBox.style.display = (highlightBox.style.display === "none") ? "block" : "none";
+        }
+
+        function adjustHighlightPositions(currentImage) {
+            let mainImage = document.getElementById("mainImage");
+            let greenHighlightBox = document.getElementById("greenHighlightBox");
+            let blueHighlightBox = document.getElementById("blueHighlightBox");
+            let redHighlightBox = document.getElementById("redHighlightBox");
+
+            let imageWidth = mainImage.clientWidth;
+            let imageHeight = mainImage.clientHeight;
+
+            let greenPosition, redPosition, bluePosition; /* X, Y, Width, Height */
+            switch(currentImage) {
+                case "homepage":
+                    greenPosition = [0, 3, 100, 97];
+                    bluePosition = [3, 0, 40, 3];
+                    redPosition = [70, 1.5, 20, 1.5];
+                    break;
+                case "plp":
+                    greenPosition = [30, 6, 60, 6];
+                    bluePosition = [0, 5, 100, 92];
+                    redPosition = [70, 2, 20, 3];
+                    break;
+                case "search-results":
+                    greenPosition = [0, 97.5, 100, 2.5];
+                    bluePosition = [6, 0, 50, 5];
+                    redPosition = [0, 5, 100, 92.5];
+                    break;
+                case "product-page":
+                    greenPosition = [0, 56.5, 100, 2.5];
+                    bluePosition = [0, 6.5, 100, 50];
+                    redPosition = [0, 59, 100, 30];
+                    break;
+            }
+
+            greenHighlightBox.style.left = greenPosition[0] + "%";
+            greenHighlightBox.style.top = greenPosition[1] + "%";
+            greenHighlightBox.style.width = greenPosition[2]  + "%";
+            greenHighlightBox.style.height = greenPosition[3] + "%";
+
+            blueHighlightBox.style.left = bluePosition[0] + "%";
+            blueHighlightBox.style.top = bluePosition[1] + "%";
+            blueHighlightBox.style.width = bluePosition[2]  + "%";
+            blueHighlightBox.style.height = bluePosition[3] + "%";
+
+            redHighlightBox.style.left = redPosition[0] + "%";
+            redHighlightBox.style.top = redPosition[1] + "%";
+            redHighlightBox.style.width = redPosition[2]  + "%";
+            redHighlightBox.style.height = redPosition[3] + "%";
+
+        }
+    </script>
+</body>
+
+</html>
