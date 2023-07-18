@@ -28,13 +28,13 @@
         .highlight {
             position: absolute;
             pointer-events: none;
-            display:block;
+            display: none;
             box-sizing: border-box;
         }
 
         .highlight.green {
             background-color: rgba(0, 255, 0, 0.3);
-            border: 4px solid rgba(0,255, 0, 0.5);
+            border: 4px solid rgba(0, 255, 0, 0.5);
             /* Green highlight color */
         }
 
@@ -52,9 +52,31 @@
             max-width: 100%;
             width: 800px;
         }
+
         #imageDisplay {
             position: relative;
-            border: 4px solid grey;
+        }
+
+
+        .dot {
+            height: 12px;
+            width: 12px;
+            background-color: #aaa;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .browser {
+            border: 4px solid #eee;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .top {
+            padding: 10px;
+            background: #eee;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
         }
     </style>
 </head>
@@ -68,22 +90,31 @@
             <button class="button" onclick="changeImage('product-page')">Product Page</button>
         </div>
         <div class="row">
-            <button class="button" style="border: solid 3px green;" onclick="toggleHighlight('green')">CMS</button>
-            <button class="button" style="border: solid 3px blue;" onclick="toggleHighlight('blue')">PIM</button>
-            <button class="button" style="border: solid 3px red;" onclick="toggleHighlight('red')">Search</button>
+            <button class="button" style="border: solid 3px green;" onclick="toggleHighlight('green')"
+                onmouseover="toggleHighlight('green', 'block')"
+                onmouseout="toggleHighlight('green', 'none')">CMS</button>
+            <button class="button" style="border: solid 3px blue;" onclick="toggleHighlight('blue')"
+                onmouseover="toggleHighlight('blue', 'block')" onmouseout="toggleHighlight('blue', 'none')">PIM</button>
+            <button class="button" style="border: solid 3px red;" onclick="toggleHighlight('red')"
+                onmouseover="toggleHighlight('red', 'block')"
+                onmouseout="toggleHighlight('red', 'none')">Search</button>
         </div>
-        <div id="imageDisplay">
-            <img id="mainImage" src="images/homepage.png" alt="Main Image">
-            <div id="greenHighlightBox" class="highlight green"></div>
-            <div id="blueHighlightBox" class="highlight blue"></div>
-            <div id="redHighlightBox" class="highlight red"></div>
+        <div class="browser">
+            <div class="top">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <div id="imageDisplay" class="content">
+                <img id="mainImage" src="images/homepage.png" alt="Main Image">
+                <div id="greenHighlightBox" class="highlight green"></div>
+                <div id="blueHighlightBox" class="highlight blue"></div>
+                <div id="redHighlightBox" class="highlight red"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        let greenHighlightVisible = false;
-        let blueHighlightVisible = false;
-        let redHighlightVisible = false;
         let currentImage = "homepage";
         adjustHighlightPositions(currentImage);
 
@@ -93,9 +124,21 @@
             adjustHighlightPositions(currentImage);
         }
 
-        function toggleHighlight(color) {
+        function toggleHighlight(color, display) {
             let highlightBox = document.getElementById(`${color}HighlightBox`);
-            highlightBox.style.display = (highlightBox.style.display === "none") ? "block" : "none";
+            if (!display) {
+                if (highlightBox.keep) {
+                    highlightBox.keep = false;
+                    highlightBox.style.display = "none";
+                }
+                else {
+                    highlightBox.keep = true;
+                    highlightBox.style.display = "block";
+                }
+            }
+            else if (!highlightBox.keep) {
+                highlightBox.style.display = display;
+            }
         }
 
         function adjustHighlightPositions(currentImage) {
@@ -108,7 +151,7 @@
             let imageHeight = mainImage.clientHeight;
 
             let greenPosition, redPosition, bluePosition; /* X, Y, Width, Height */
-            switch(currentImage) {
+            switch (currentImage) {
                 case "homepage":
                     greenPosition = [0, 3, 100, 97];
                     bluePosition = [3, 0, 40, 3];
@@ -133,17 +176,17 @@
 
             greenHighlightBox.style.left = greenPosition[0] + "%";
             greenHighlightBox.style.top = greenPosition[1] + "%";
-            greenHighlightBox.style.width = greenPosition[2]  + "%";
+            greenHighlightBox.style.width = greenPosition[2] + "%";
             greenHighlightBox.style.height = greenPosition[3] + "%";
 
             blueHighlightBox.style.left = bluePosition[0] + "%";
             blueHighlightBox.style.top = bluePosition[1] + "%";
-            blueHighlightBox.style.width = bluePosition[2]  + "%";
+            blueHighlightBox.style.width = bluePosition[2] + "%";
             blueHighlightBox.style.height = bluePosition[3] + "%";
 
             redHighlightBox.style.left = redPosition[0] + "%";
             redHighlightBox.style.top = redPosition[1] + "%";
-            redHighlightBox.style.width = redPosition[2]  + "%";
+            redHighlightBox.style.width = redPosition[2] + "%";
             redHighlightBox.style.height = redPosition[3] + "%";
 
         }
